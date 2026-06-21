@@ -19,6 +19,9 @@ from runtime.services.init_service import run_init
 from runtime.services.status_service import run_status
 from runtime.services.sync_service import run_sync
 from runtime.cli.animation import BackgroundAnimator
+from runtime.cli.auth import ensure_authenticated
+from runtime.cli.telemetry import send_telemetry_async
+import shutil
 
 app = typer.Typer(
     name="brain",
@@ -26,8 +29,27 @@ app = typer.Typer(
     add_completion=False,
     no_args_is_help=True,
 )
+
 console = Console()
 animator = BackgroundAnimator()
+
+
+def _capture_console_lines(renderable) -> list[str]:
+    """Capture rich console output and split it into clean string lines constrained to right column."""
+    if sys.stdout.isatty():
+        cols, lines = shutil.get_terminal_size()
+        if cols >= 80 and lines >= 14:
+            right_width = max(20, cols - 35 - 4)
+        else:
+            right_width = max(20, cols - 4)
+        from rich.console import Console as RichConsole
+        temp_console = RichConsole(width=right_width, color_system=console.color_system)
+    else:
+        temp_console = console
+
+    with temp_console.capture() as capture:
+        temp_console.print(renderable)
+    return capture.get().rstrip().split("\n")
 
 
 def _update_animator(logger, method_name, event_dict):
@@ -59,37 +81,54 @@ def _handle_error(e: Exception) -> None:
 @app.command(".")
 def init_command() -> None:
     """Initialize a new Brain instance in the current repository."""
+    try:
+        ensure_authenticated()
+    except Exception as e:
+        _handle_error(e)
+
     animator.start()
     try:
         cwd = Path.cwd()
         result = run_init(cwd)
-        animator.stop(final_status="Initialization complete.")
-        
-        console.print(
-            Panel.fit(
-                f"[bold green]{result.message}[/bold green]\n"
-                f"Structural Revision: [cyan]{result.structural_revision}[/cyan]\n"
-                f"Initial Snapshot: [cyan]{result.snapshot_file}[/cyan]",
-                title="Brain Initialization",
-                border_style="green",
-            )
+        panel = Panel.fit(
+            f"[bold green]{result.message}[/bold green]\n"
+            f"Structural Revision: [cyan]{result.structural_revision}[/cyan]\n"
+            f"Initial Snapshot: [cyan]{result.snapshot_file}[/cyan]",
+            title="Brain Initialization",
+            border_style="green",
         )
+        results_lines = _capture_console_lines(panel)
+        animator.stop(final_status="Initialization complete.", results=results_lines)
+        send_telemetry_async("init", "success")
     except Exception as e:
         animator.stop(final_status="Initialization failed.")
+        send_telemetry_async("init", "failed")
         _handle_error(e)
+
+
+@app.command("init")
+def init_alias_command() -> None:
+    """Initialize a new Brain instance in the current repository."""
+    init_command()
 
 
 @app.command("sync")
 def sync_command() -> None:
     """Synchronize the Brain artifact with the current repository state."""
+    try:
+        ensure_authenticated()
+    except Exception as e:
+        _handle_error(e)
+
     animator.start()
     try:
         cwd = Path.cwd()
         result = run_sync(cwd)
-        animator.stop(final_status="Sync complete.")
         
         if not result.changes_detected:
-            console.print(f"[green]✓[/green] {result.message}")
+            results_lines = _capture_console_lines(f"[green]✓[/green] {result.message}")
+            animator.stop(final_status="Sync complete.", results=results_lines)
+            send_telemetry_async("sync", "success")
             return
             
         table = Table(title="Sync Results", show_header=False)
@@ -101,21 +140,29 @@ def sync_command() -> None:
         table.add_row("Report", result.report_file)
         table.add_row("Components", ", ".join(result.affected_components) if result.affected_components else "None")
         
-        console.print(Panel.fit(table, title="[bold green]Sync Complete[/bold green]", border_style="green"))
+        panel = Panel.fit(table, title="[bold green]Sync Complete[/bold green]", border_style="green")
+        results_lines = _capture_console_lines(panel)
+        animator.stop(final_status="Sync complete.", results=results_lines)
+        send_telemetry_async("sync", "success")
         
     except Exception as e:
         animator.stop(final_status="Sync failed.")
+        send_telemetry_async("sync", "failed")
         _handle_error(e)
 
 
 @app.command("status")
 def status_command() -> None:
     """View the current status of the Brain instance."""
+    try:
+        ensure_authenticated()
+    except Exception as e:
+        _handle_error(e)
+
     animator.start()
     try:
         cwd = Path.cwd()
         result = run_status(cwd)
-        animator.stop(final_status="Status retrieved.")
         
         table = Table(title=f"Brain Status: {result.repository_root}", show_header=False)
         table.add_column("Key", style="dim")
@@ -130,22 +177,29 @@ def status_command() -> None:
         last_sync = result.last_sync.strftime("%Y-%m-%d %H:%M:%S UTC") if result.last_sync else "Never"
         table.add_row("Last Sync", last_sync)
         
-        console.print(table)
+        results_lines = _capture_console_lines(table)
+        animator.stop(final_status="Status retrieved.", results=results_lines)
+        send_telemetry_async("status", "success")
         
     except Exception as e:
         animator.stop(final_status="Failed to get status.")
+        send_telemetry_async("status", "failed")
         _handle_error(e)
 
 
 @app.command("sync-semantic")
 def sync_semantic_command() -> None:
     """Commit semantic changes and flush the active memory buffer."""
+    try:
+        ensure_authenticated()
+    except Exception as e:
+        _handle_error(e)
+
     animator.start()
     try:
         from runtime.services.semantic_sync_service import run_semantic_sync
         cwd = Path.cwd()
         result = run_semantic_sync(cwd)
-        animator.stop(final_status="Semantic sync complete.")
         
         table = Table(title="Semantic Sync Results", show_header=False)
         table.add_column("Key", style="dim")
@@ -154,12 +208,17 @@ def sync_semantic_command() -> None:
         table.add_row("Revision", result.semantic_revision)
         table.add_row("Memory", "[dim]Flushed previous_context.md[/dim]")
         
-        console.print(Panel.fit(table, title=f"[bold magenta]✓ {result.message}[/bold magenta]", border_style="magenta"))
+        panel = Panel.fit(table, title=f"[bold magenta]✓ {result.message}[/bold magenta]", border_style="magenta")
+        results_lines = _capture_console_lines(panel)
+        animator.stop(final_status="Semantic sync complete.", results=results_lines)
+        send_telemetry_async("sync-semantic", "success")
         
     except Exception as e:
         animator.stop(final_status="Semantic sync failed.")
+        send_telemetry_async("sync-semantic", "failed")
         _handle_error(e)
 
 
 if __name__ == "__main__":
     app()
+

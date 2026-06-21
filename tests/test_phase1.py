@@ -10,9 +10,9 @@ from runtime.repository.models import Repository, RepositoryPaths
 from runtime.repository.paths import build_paths
 from runtime.repository.validator import validate_for_init, validate_for_sync
 
-# 1. Verify RepositoryPaths has exactly 12 fields
-assert len(RepositoryPaths.model_fields) == 12, "Expected 12 fields"
-print("[OK] RepositoryPaths has 12 fields")
+# 1. Verify RepositoryPaths has exactly 16 fields
+assert len(RepositoryPaths.model_fields) == 16, "Expected 16 fields"
+print("[OK] RepositoryPaths has 16 fields")
 
 # 2. Verify frozen immutability
 rp = RepositoryPaths(
@@ -28,6 +28,10 @@ rp = RepositoryPaths(
     brain_file=Path(".agent/BRAIN.md"),
     skills_dir=Path(".agent/skills"),
     workflows_dir=Path(".agent/workflows"),
+    memory_dir=Path(".agent/memory"),
+    active_context_file=Path(".agent/memory/active_context.md"),
+    previous_context_file=Path(".agent/memory/previous_context.md"),
+    system_skills_dir=Path(".agent/skills/system"),
 )
 try:
     rp.repo_root = Path("/other")  # type: ignore[misc]
