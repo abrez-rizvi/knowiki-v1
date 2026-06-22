@@ -1,4 +1,4 @@
-# Runtime — the orchestration layer of the Knowiki ecosystem.
+# Runtime — the orchestration layer of the Knowcode ecosystem.
 # Owns: CLI, commands, services, repository discovery, artifact creation,
 #        validation, configuration, output, exception handling, delegation.
 # Never owns: parsing, snapshots, reports, logs, revisions, state, semantic knowledge.

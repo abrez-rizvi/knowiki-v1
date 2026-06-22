@@ -49,7 +49,7 @@ def discover_repository(start: Path | None = None) -> Repository:
             return Repository(
                 root=current,
                 git_dir=git_dir,
-                brain_dir=current / ".brain",
+                knowcode_dir=current / ".knowcode",
                 agent_dir=current / ".agent",
             )
 

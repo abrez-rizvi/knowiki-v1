@@ -1,4 +1,4 @@
-name: Publish KnoWiki
+name: Publish Knowcode
 
 on:
   release:
@@ -31,20 +31,20 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            pkg_name: knowiki-win32-x64
+            pkg_name: knowcode-win32-x64
             npm_os: win32
             npm_cpu: x64
-            artifact_name: brain.exe
+            artifact_name: knowcode.exe
           - os: macos-latest
-            pkg_name: knowiki-darwin-arm64
+            pkg_name: knowcode-darwin-arm64
             npm_os: darwin
             npm_cpu: arm64
-            artifact_name: brain
+            artifact_name: knowcode
           - os: ubuntu-latest
-            pkg_name: knowiki-linux-x64
+            pkg_name: knowcode-linux-x64
             npm_os: linux
             npm_cpu: x64
-            artifact_name: brain
+            artifact_name: knowcode
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -62,7 +62,7 @@ jobs:
           pip install .
           pip install pyinstaller
       - name: Build executable
-        run: pyinstaller --name brain --onefile src/runtime/cli/app.py
+        run: pyinstaller --name knowcode --onefile src/runtime/cli/app.py
       - name: Prepare NPM package
         shell: bash
         run: |
@@ -72,14 +72,14 @@ jobs:
           {
             "name": "${{ matrix.pkg_name }}",
             "version": "0.1.0",
-            "description": "Platform specific binary for KnoWiki",
+            "description": "Platform specific binary for Knowcode",
             "os": [
               "${{ matrix.npm_os }}"
             ],
             "cpu": [
               "${{ matrix.npm_cpu }}"
             ],
-            "author": "KnoWiki Team",
+            "author": "Knowcode Team",
             "license": "MIT"
           }
           EOF
@@ -101,7 +101,7 @@ jobs:
           node-version: "20.x"
           registry-url: 'https://registry.npmjs.org'
       - name: Publish Wrapper
-        working-directory: npm/knowiki
+        working-directory: npm/knowcode
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public

@@ -21,10 +21,10 @@ def test_phase5():
         # Mock paths
         git_dir = td / ".git"
         git_dir.mkdir()
-        brain_dir = td / ".brain"
-        brain_dir.mkdir()
+        knowcode_dir = td / ".knowcode"
+        knowcode_dir.mkdir()
         
-        repo = Repository(root=td.resolve(), git_dir=git_dir.resolve(), brain_dir=brain_dir.resolve(), agent_dir=(td / ".agent").resolve())
+        repo = Repository(root=td.resolve(), git_dir=git_dir.resolve(), knowcode_dir=knowcode_dir.resolve(), agent_dir=(td / ".agent").resolve())
         paths = build_paths(repo)
         
         # Ensure directories exist

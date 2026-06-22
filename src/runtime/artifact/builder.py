@@ -48,7 +48,7 @@ class ArtifactBuilder:
 
         Creates all required directories and renders static templates.
         """
-        logger.info("artifact_builder.started", brain_root=str(self.paths.brain_root))
+        logger.info("artifact_builder.started", knowcode_root=str(self.paths.knowcode_root))
 
         self._create_directories()
         self._render_templates()
@@ -59,7 +59,7 @@ class ArtifactBuilder:
         """Create the directory tree."""
         # Define all required subdirectories
         dirs_to_create = [
-            self.paths.brain_root,
+            self.paths.knowcode_root,
             self.paths.structure_dir,
             self.paths.snapshots_dir,
             self.paths.reports_dir,
@@ -70,11 +70,12 @@ class ArtifactBuilder:
             self.paths.knowledge_dir / "constraints",
             self.paths.knowledge_dir / "conventions",
             self.paths.knowledge_dir / "components",
-            self.paths.agent_root,
+            self.paths.agent_dir,
             self.paths.skills_dir,
             self.paths.workflows_dir,
             self.paths.memory_dir,
             self.paths.system_skills_dir,
+            self.paths.raw_knowledge_dir,
         ]
 
         for directory in dirs_to_create:
@@ -83,14 +84,14 @@ class ArtifactBuilder:
 
     def _render_templates(self) -> None:
         """Render and write static markdown templates."""
-        # 1. Render BRAIN.md
-        brain_template = self.jinja_env.get_template("BRAIN.md.j2")
+        # 1. Render KNOWCODE.md
+        knowcode_template = self.jinja_env.get_template("KNOWCODE.md.j2")
         # Use the name of the repository root directory as the project name
         project_name = self.paths.repo_root.name
         
-        brain_content = brain_template.render(project_name=project_name)
-        self.paths.brain_file.write_text(brain_content, encoding="utf-8")
-        logger.debug("artifact_builder.render", file=str(self.paths.brain_file))
+        knowcode_content = knowcode_template.render(project_name=project_name)
+        self.paths.knowcode_file.write_text(knowcode_content, encoding="utf-8")
+        logger.debug("artifact_builder.render", file=str(self.paths.knowcode_file))
 
         # 2. Render knowledge-maintenance.md
         km_template = self.jinja_env.get_template("knowledge-maintenance.md.j2")
@@ -139,3 +140,10 @@ class ArtifactBuilder:
         ct_file = self.paths.system_skills_dir / "context_tracker.md"
         ct_file.write_text(ct_content, encoding="utf-8")
         logger.debug("artifact_builder.render", file=str(ct_file))
+
+        # 8. Render raw inbox README
+        raw_template = self.jinja_env.get_template("raw_readme.md.j2")
+        raw_content = raw_template.render()
+        raw_file = self.paths.raw_knowledge_dir / "README.md"
+        raw_file.write_text(raw_content, encoding="utf-8")
+        logger.debug("artifact_builder.render", file=str(raw_file))

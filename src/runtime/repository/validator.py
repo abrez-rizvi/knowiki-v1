@@ -7,7 +7,7 @@ different requirements than synchronization.
 Checks
 ------
 - Git repository exists (``.git``).
-- Brain artifact initialized (``.brain``).
+- Brain artifact initialized (``.knowcode``).
 - ``state.yaml`` exists.
 - ``structure/`` folder exists.
 
@@ -17,16 +17,16 @@ Raises typed exceptions from ``runtime.exceptions.errors``.
 from __future__ import annotations
 
 from runtime.exceptions.errors import (
-    BrainAlreadyInitialized,
-    BrainNotInitialized,
-    CorruptBrainArtifact,
+    KnowcodeAlreadyInitialized,
+    KnowcodeNotInitialized,
+    CorruptKnowcodeArtifact,
     NotGitRepository,
 )
 from runtime.repository.models import RepositoryPaths
 
 
 def validate_for_init(paths: RepositoryPaths) -> None:
-    """Validate preconditions for ``brain .`` (initialization).
+    """Validate preconditions for ``knowcode .`` (initialization).
 
     Parameters
     ----------
@@ -37,8 +37,8 @@ def validate_for_init(paths: RepositoryPaths) -> None:
     ------
     NotGitRepository
         If the ``.git`` directory does not exist.
-    BrainAlreadyInitialized
-        If a ``.brain`` directory already exists.
+    KnowcodeAlreadyInitialized
+        If a ``.knowcode`` directory already exists.
     """
     git_dir = paths.repo_root / ".git"
     if not git_dir.is_dir():
@@ -46,19 +46,18 @@ def validate_for_init(paths: RepositoryPaths) -> None:
             f"Not a git repository: {paths.repo_root}"
         )
 
-    if paths.brain_root.is_dir():
-        raise BrainAlreadyInitialized(
-            f"Brain artifact already exists: {paths.brain_root}"
+    if paths.knowcode_root.is_dir():
+        raise KnowcodeAlreadyInitialized(
+            f"Brain artifact already exists: {paths.knowcode_root}"
         )
         
-    if paths.agent_root.is_dir():
-        raise BrainAlreadyInitialized(
-            f"Agent artifact already exists: {paths.agent_root}"
+    if paths.agent_dir.is_dir():
+        raise KnowcodeAlreadyInitialized(
+            f"Agent artifact already exists: {paths.agent_dir}"
         )
-
 
 def validate_for_sync(paths: RepositoryPaths) -> None:
-    """Validate preconditions for ``brain sync`` or ``brain status``.
+    """Validate preconditions for ``knowcode sync`` or ``knowcode status``.
 
     Parameters
     ----------
@@ -69,10 +68,10 @@ def validate_for_sync(paths: RepositoryPaths) -> None:
     ------
     NotGitRepository
         If the ``.git`` directory does not exist.
-    BrainNotInitialized
-        If the ``.brain`` directory does not exist.
-    CorruptBrainArtifact
-        If ``.brain`` exists but critical internal structure is missing.
+    KnowcodeNotInitialized
+        If the ``.knowcode`` directory does not exist.
+    CorruptKnowcodeArtifact
+        If ``.knowcode`` exists but critical internal structure is missing.
     """
     git_dir = paths.repo_root / ".git"
     if not git_dir.is_dir():
@@ -80,22 +79,22 @@ def validate_for_sync(paths: RepositoryPaths) -> None:
             f"Not a git repository: {paths.repo_root}"
         )
 
-    if not paths.brain_root.is_dir():
-        raise BrainNotInitialized(
-            f"Brain artifact not found. Run 'brain .' first: {paths.repo_root}"
+    if not paths.knowcode_root.is_dir():
+        raise KnowcodeNotInitialized(
+            f"Brain artifact not found. Run 'knowcode .' first: {paths.repo_root}"
         )
         
-    if not paths.agent_root.is_dir():
-        raise BrainNotInitialized(
-            f"Agent artifact not found. Run 'brain .' first: {paths.repo_root}"
+    if not paths.agent_dir.is_dir():
+        raise KnowcodeNotInitialized(
+            f"Agent artifact not found. Run 'knowcode .' first: {paths.repo_root}"
         )
 
     if not paths.state_file.is_file():
-        raise CorruptBrainArtifact(
+        raise CorruptKnowcodeArtifact(
             f"state.yaml missing: {paths.state_file}"
         )
 
     if not paths.structure_dir.is_dir():
-        raise CorruptBrainArtifact(
+        raise CorruptKnowcodeArtifact(
             f"structure directory missing: {paths.structure_dir}"
         )

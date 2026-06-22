@@ -1,4 +1,4 @@
-"""Logo animation module for KnoWiki CLI."""
+"""Logo animation module for Knowcode CLI."""
 
 from __future__ import annotations
 
@@ -24,20 +24,21 @@ WHITE = "\033[97m"
 GRAY = "\033[90m"
 
 LOGO_LINES = [
-    "███████████████████████",
-    "██                   ██",
-    "██   █████████████   ██",
-    "██   █████   █████   ██",
-    "██   ██████ ██████   ██",
-    "██   █████   █████   ██",
-    "██   █████████████   ██",
-    "██                   ██",
-    "███████████████████████",
+    "███████████████████████████████",
+    "██                           ██",
+    "██    ███████████████████    ██",
+    "██    ███████▀   ▀███████    ██",
+    "██    ███████▄   ▄███████    ██",
+    "██    █████████ █████████    ██",
+    "██    █████████ █████████    ██",
+    "██    █████████ █████████    ██",
+    "██                           ██",
+    "███████████████████████████████",
 ]
 
 LXN = len(LOGO_LINES[0]) - 1
 LYN = len(LOGO_LINES) - 1
-TAGLINE = "KnoWiki"
+TAGLINE = "Knowcode"
 VERSION = "v0.1.0"
 
 
@@ -68,7 +69,7 @@ def pad_left(s: str, width: int) -> str:
 
 
 class BackgroundAnimator:
-    """Animate the KnoWiki logo in the background while tasks execute."""
+    """Animate the Knowcode logo in the background while tasks execute."""
     
     def __init__(self):
         self.status = "Starting..."

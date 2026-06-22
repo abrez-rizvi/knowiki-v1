@@ -90,7 +90,7 @@ def test_language_detection():
 
 def test_ignored_directories():
     """Verify ignored directory set contains required entries."""
-    required = {".git", ".brain", "node_modules", "dist", "build", "target", "venv"}
+    required = {".git", ".knowcode", "node_modules", "dist", "build", "target", "venv"}
     assert required.issubset(IGNORED_DIRECTORIES)
 
     print("[OK] All required directories are in the ignore set")
@@ -114,8 +114,8 @@ def test_file_discovery():
         (td / "node_modules" / "lib.js").write_text("// lib", encoding="utf-8")
         (td / ".git").mkdir()
         (td / ".git" / "config").write_text("[core]", encoding="utf-8")
-        (td / ".brain").mkdir()
-        (td / ".brain" / "state.yaml").write_text("rev: 1", encoding="utf-8")
+        (td / ".knowcode").mkdir()
+        (td / ".knowcode" / "state.yaml").write_text("rev: 1", encoding="utf-8")
         (td / "venv").mkdir()
         (td / "venv" / "activate.py").write_text("# venv", encoding="utf-8")
 
@@ -133,7 +133,7 @@ def test_file_discovery():
             assert "\\" not in f.relative_path, f"Backslash in path: {f.relative_path}"
 
         # Verify ignored dirs were actually skipped
-        ignored_paths = {"node_modules/lib.js", ".git/config", ".brain/state.yaml", "venv/activate.py"}
+        ignored_paths = {"node_modules/lib.js", ".git/config", ".knowcode/state.yaml", "venv/activate.py"}
         discovered_paths = {f.relative_path for f in files}
         assert ignored_paths.isdisjoint(discovered_paths), "Ignored files leaked through"
 
@@ -159,7 +159,7 @@ def test_parse_stub():
         (td / "src").mkdir()
         (td / "src" / "main.py").write_text("def main(): pass", encoding="utf-8")
 
-        repo = Repository(root=td.resolve(), git_dir=(td / ".git").resolve(), brain_dir=(td / ".brain").resolve(), agent_dir=(td / ".agent").resolve())
+        repo = Repository(root=td.resolve(), git_dir=(td / ".git").resolve(), knowcode_dir=(td / ".knowcode").resolve(), agent_dir=(td / ".agent").resolve())
         paths = build_paths(repo)
 
         snapshot = parse(paths)

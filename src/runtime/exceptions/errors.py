@@ -1,38 +1,43 @@
-"""Runtime exception hierarchy.
+"""Runtime exceptions.
 
-All Runtime-level exceptions inherit from ``BrainError`` so that the
-CLI layer can catch a single base class and render user-friendly output.
+All Runtime-level exceptions inherit from ``KnowcodeError`` so that the
+CLI can catch them uniformly and format them as user-friendly messages
+without stack traces.
 
 Hierarchy
 ---------
 ::
 
-    BrainError
+    KnowcodeError
     ├── RepositoryError
     │   ├── NotGitRepository
     │   └── RepositoryNotFound
     ├── ArtifactError
-    │   ├── BrainAlreadyInitialized
-    │   ├── BrainNotInitialized
-    │   └── CorruptBrainArtifact
+    │   ├── KnowcodeAlreadyInitialized
+    │   ├── KnowcodeNotInitialized
+    │   ├── CorruptKnowcodeArtifact
+    │   ├── ScaffoldingFailed
+    │   └── TemplateRenderFailed
     ├── ConfigError
-    │   ├── InvalidConfig
-    │   └── MissingConfig
+    │   ├── ConfigNotFound
+    │   └── InvalidConfig
     └── SyncError
-        └── StructuralEngineFailure
+        ├── StructuralEngineFailure
+        └── SemanticSyncFailure
 """
 
 from __future__ import annotations
 
 
-# ── Base ──────────────────────────────────────────────────────────────
-class BrainError(Exception):
-    """Root of the Runtime exception hierarchy."""
+class KnowcodeError(Exception):
+    """Base exception for all domain-level Knowcode errors.
+    
+    Caught by the CLI layer to present a clean, un-traced error message.
+    """
 
 
-# ── Repository ────────────────────────────────────────────────────────
-class RepositoryError(BrainError):
-    """Errors related to repository discovery and validation."""
+class RepositoryError(KnowcodeError):
+    """Base exception for repository discovery and path issues."""
 
 
 class NotGitRepository(RepositoryError):
@@ -40,47 +45,55 @@ class NotGitRepository(RepositoryError):
 
 
 class RepositoryNotFound(RepositoryError):
-    """No git repository could be found by walking upward from cwd."""
+    """Raised when no `.git` directory can be found by walking upward.
+    
+    This indicates Knowcode was invoked outside a valid git repository.
+    """
 
 
-# ── Artifact ──────────────────────────────────────────────────────────
-class ArtifactError(BrainError):
-    """Errors related to the Brain artifact filesystem."""
+class ArtifactError(KnowcodeError):
+    """Base exception for Knowcode artifact filesystem failures."""
 
 
-class BrainAlreadyInitialized(ArtifactError):
-    """A .brain directory already exists in this repository."""
+class KnowcodeAlreadyInitialized(ArtifactError):
+    """A .knowcode directory already exists in this repository."""
 
 
-class BrainNotInitialized(ArtifactError):
-    """No .brain directory found — run ``brain .`` first."""
+class KnowcodeNotInitialized(ArtifactError):
+    """No .knowcode directory found — run ``knowcode .`` first."""
 
 
-class CorruptBrainArtifact(ArtifactError):
-    """The .brain directory exists but is structurally invalid."""
+class CorruptKnowcodeArtifact(ArtifactError):
+    """The .knowcode directory exists but is structurally invalid."""
 
 
-# ── Config ────────────────────────────────────────────────────────────
-class ConfigError(BrainError):
-    """Errors related to runtime configuration."""
+class ScaffoldingFailed(ArtifactError):
+    """Raised when directory creation fails (e.g., permission denied)."""
+
+
+class TemplateRenderFailed(ArtifactError):
+    """Raised when a static markdown template fails to render."""
+
+
+class ConfigError(KnowcodeError):
+    """Base exception for configuration loading or parsing failures."""
+
+
+class ConfigNotFound(ConfigError):
+    """Raised when `config.yaml` is missing and is strictly required."""
 
 
 class InvalidConfig(ConfigError):
-    """Configuration file contains invalid values."""
+    """Raised when `config.yaml` contains malformed or invalid YAML."""
 
 
-class MissingConfig(ConfigError):
-    """Expected configuration file was not found."""
-
-
-# ── Sync ──────────────────────────────────────────────────────────────
-class SyncError(BrainError):
-    """Errors during structural synchronization."""
+class SyncError(KnowcodeError):
+    """Base exception for synchronization workflow failures."""
 
 
 class StructuralEngineFailure(SyncError):
     """The Structural Engine raised an unrecoverable error during sync."""
 
-# test sync
 
-# test sync
+class SemanticSyncFailure(SyncError):
+    """Raised when the semantic reconciliation workflow fails."""

@@ -7,9 +7,9 @@ const platform = os.platform(); // 'win32', 'darwin', 'linux'
 const arch = os.arch();         // 'x64', 'arm64'
 
 const packageMap = {
-  'win32-x64': 'knowiki-win32-x64',
-  'darwin-arm64': 'knowiki-darwin-arm64',
-  'linux-x64': 'knowiki-linux-x64'
+  'win32-x64': 'knowcode-win32-x64',
+  'darwin-arm64': 'knowcode-darwin-arm64',
+  'linux-x64': 'knowcode-linux-x64'
 };
 
 const key = `${platform}-${arch}`;
@@ -21,11 +21,11 @@ if (!targetPackageName) {
 }
 
 try {
-  const binaryName = platform === 'win32' ? 'brain.exe' : 'brain';
+  const binaryName = platform === 'win32' ? 'knowcode.exe' : 'knowcode';
   const binaryPath = require.resolve(`${targetPackageName}/bin/${binaryName}`);
 
   // Set the environment variable to identify npm install method
-  process.env.KNOWIKI_INSTALL_METHOD = 'npm';
+  process.env.KNOWCODE_INSTALL_METHOD = 'npm';
 
   const result = spawnSync(binaryPath, process.argv.slice(2), {
     stdio: 'inherit',
@@ -34,7 +34,7 @@ try {
 
   process.exit(result.status ?? 0);
 } catch (err) {
-  console.error(`Error: Failed to execute KnoWiki CLI binary.
+  console.error(`Error: Failed to execute Knowcode CLI binary.
 Details: ${err.message}
 Please ensure that the platform-specific dependency '${targetPackageName}' is installed correctly.`);
   process.exit(1);

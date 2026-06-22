@@ -26,10 +26,14 @@ def test_phase6():
         
         # 1. Test init
         result = runner.invoke(app, ["."])
+        if result.exit_code != 0:
+            print("INIT FAILED STDOUT:", result.stdout)
+            if result.exception:
+                print("INIT EXCEPTION:", result.exception)
         assert result.exit_code == 0
         assert "Structural Engine initialized successfully" in result.stdout
         assert "S-001" in result.stdout
-        print("[OK] brain . (Init)")
+        print("[OK] knowcode . (Init)")
         
         # 2. Test status
         result = runner.invoke(app, ["status"])
@@ -38,13 +42,13 @@ def test_phase6():
         assert "Yes" in result.stdout
         assert "S-001" in result.stdout
         assert "none" in result.stdout  # semantic_revision
-        print("[OK] brain status")
+        print("[OK] knowcode status")
         
         # 3. Test sync (No Changes)
         result = runner.invoke(app, ["sync"])
         assert result.exit_code == 0
         assert "No structural changes detected" in result.stdout
-        print("[OK] brain sync (No Changes shortcut)")
+        print("[OK] knowcode sync (No Changes shortcut)")
         
         # 4. Modify code to trigger a sync
         (src / "main.py").write_text("def main():\n    pass\n", encoding="utf-8")
@@ -55,13 +59,13 @@ def test_phase6():
         assert "Sync Complete" in result.stdout
         assert "S-002" in result.stdout
         assert "src" in result.stdout  # Affected component
-        print("[OK] brain sync (Changes detected -> S-002)")
+        print("[OK] knowcode sync (Changes detected -> S-002)")
         
         # 6. Test status again
         result = runner.invoke(app, ["status"])
         assert result.exit_code == 0
         assert "S-002" in result.stdout
-        print("[OK] brain status (Post-sync verification)")
+        print("[OK] knowcode status (Post-sync verification)")
         
     finally:
         os.chdir(old_cwd)

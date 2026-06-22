@@ -1,4 +1,4 @@
-"""Authentication and configuration module for KnoWiki CLI."""
+"""Authentication and configuration module for Knowcode CLI."""
 
 from __future__ import annotations
 
@@ -12,9 +12,9 @@ from pathlib import Path
 from platformdirs import user_config_dir
 import typer
 from rich.console import Console
-from runtime.exceptions.errors import BrainError
+from runtime.exceptions.errors import KnowcodeError
 
-CONFIG_DIR = Path(user_config_dir("knowiki"))
+CONFIG_DIR = Path(user_config_dir("knowcode"))
 CONFIG_FILE = CONFIG_DIR / "config.json"
 
 
@@ -56,7 +56,7 @@ def validate_access_key(key: str) -> bool:
         return False
         
     # If in pytest / testing env, bypass validation
-    if "PYTEST_CURRENT_TEST" in os.environ or os.environ.get("KNOWIKI_TESTING") == "true":
+    if "PYTEST_CURRENT_TEST" in os.environ or os.environ.get("KNOWCODE_TESTING") == "true":
         return True
         
     try:
@@ -104,8 +104,8 @@ def ensure_authenticated() -> str:
             else:
                 console.print("[red]Invalid access code. Please try again.[/red]")
         else:
-            if "PYTEST_CURRENT_TEST" in os.environ or os.environ.get("KNOWIKI_TESTING") == "true":
+            if "PYTEST_CURRENT_TEST" in os.environ or os.environ.get("KNOWCODE_TESTING") == "true":
                 save_access_key("dummy-access-key")
                 return "dummy-access-key"
-            raise BrainError("Access code is missing or invalid, and terminal is not interactive.")
+            raise KnowcodeError("Access code is missing or invalid, and terminal is not interactive.")
 

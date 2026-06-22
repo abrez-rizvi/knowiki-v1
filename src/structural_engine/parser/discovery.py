@@ -40,7 +40,7 @@ from structural_engine.parser.models import (
 IGNORED_DIRECTORIES: frozenset[str] = frozenset(
     {
         ".git",
-        ".brain",
+        ".knowcode",
         ".agent",
         "node_modules",
         "dist",

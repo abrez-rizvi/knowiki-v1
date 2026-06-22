@@ -1,4 +1,4 @@
-"""Telemetry logging module for KnoWiki CLI."""
+"""Telemetry logging module for Knowcode CLI."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from pathlib import Path
 from runtime.cli.auth import get_access_key
 
 # Default local API URL, overrideable via env var
-API_BASE_URL = os.environ.get("KNOWIKI_API_URL", "https://api.knowiki.in")
+API_BASE_URL = os.environ.get("KNOWCODE_API_URL", "https://api.knowcode.in")
 TELEMETRY_ENDPOINT = f"{API_BASE_URL}/api/telemetry"
 
 
@@ -32,7 +32,7 @@ def _send_telemetry_sync(command: str, status: str, project_id: str, access_key:
             data=data,
             headers={
                 "Content-Type": "application/json",
-                "User-Agent": "knowiki-cli-telemetry"
+                "User-Agent": "knowcode-cli-telemetry"
             },
             method="POST"
         )
@@ -46,7 +46,7 @@ def _send_telemetry_sync(command: str, status: str, project_id: str, access_key:
 
 def send_telemetry_async(command: str, status: str) -> None:
     """Dispatches command execution metrics to the backend in a detached background process."""
-    if "PYTEST_CURRENT_TEST" in os.environ or os.environ.get("KNOWIKI_TESTING") == "true":
+    if "PYTEST_CURRENT_TEST" in os.environ or os.environ.get("KNOWCODE_TESTING") == "true":
         return
 
     try:

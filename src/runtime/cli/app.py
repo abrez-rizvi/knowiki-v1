@@ -14,7 +14,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from runtime.exceptions.errors import BrainError
+from runtime.exceptions.errors import KnowcodeError
 from runtime.services.init_service import run_init
 from runtime.services.status_service import run_status
 from runtime.services.sync_service import run_sync
@@ -24,8 +24,8 @@ from runtime.cli.telemetry import send_telemetry_async
 import shutil
 
 app = typer.Typer(
-    name="brain",
-    help="KnoWiki Structural Cognition Engine",
+    name="knowcode",
+    help="Knowcode Structural Cognition Engine",
     add_completion=False,
     no_args_is_help=True,
 )
@@ -58,20 +58,20 @@ def _update_animator(logger, method_name, event_dict):
     return event_dict
 
 
-structlog.configure(
-    processors=[
-        structlog.stdlib.add_log_level,
-        structlog.processors.TimeStamper(fmt="iso"),
-        _update_animator,
-        structlog.processors.JSONRenderer()
-    ],
-    logger_factory=structlog.PrintLoggerFactory(file=open("knowiki.log", "a", encoding="utf-8")),
-)
+def _setup_logging() -> None:
+    """Configure minimal JSON logging for the entire ecosystem."""
+    structlog.configure(
+        processors=[
+            structlog.processors.TimeStamper(fmt="iso"),
+            structlog.processors.JSONRenderer(),
+        ],
+        logger_factory=structlog.PrintLoggerFactory(file=open("knowcode.log", "a", encoding="utf-8")),
+    )
 
 
 def _handle_error(e: Exception) -> None:
     """Print an error nicely and exit."""
-    if isinstance(e, BrainError):
+    if isinstance(e, KnowcodeError):
         console.print(f"[red]Error:[/red] {e}")
     else:
         console.print(f"[bold red]Unexpected Error:[/bold red] {e}")
@@ -216,6 +216,37 @@ def sync_semantic_command() -> None:
     except Exception as e:
         animator.stop(final_status="Semantic sync failed.")
         send_telemetry_async("sync-semantic", "failed")
+        _handle_error(e)
+
+
+@app.command("ingest-semantic")
+def ingest_semantic_command(
+    target_file: str = typer.Argument(..., help="Path to the raw file to ingest and remove, or '.' to process all.")
+) -> None:
+    """Ingest a legacy document and bump the semantic revision."""
+    animator.start()
+    try:
+        from runtime.services.ingest_service import run_ingest
+        cwd = Path.cwd()
+        result = run_ingest(cwd, target_file)
+        animator.stop(final_status="Semantic ingest complete.")
+        
+        if result.semantic_revision == "No change":
+            console.print(f"[yellow]ℹ {result.message}[/yellow]")
+            return
+            
+        table = Table(title="Ingest Results", show_header=False)
+        table.add_column("Key", style="dim")
+        table.add_column("Value", style="magenta")
+        
+        table.add_row("Revision", result.semantic_revision)
+        files_str = ", ".join(result.deleted_files) if len(result.deleted_files) <= 3 else f"{len(result.deleted_files)} files"
+        table.add_row("Memory", f"[dim]Flushed {files_str} from inbox[/dim]")
+        
+        console.print(Panel.fit(table, title=f"[bold magenta]✓ {result.message}[/bold magenta]", border_style="magenta"))
+        
+    except Exception as e:
+        animator.stop(final_status="Semantic ingest failed.")
         _handle_error(e)
 
 

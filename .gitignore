@@ -162,7 +162,7 @@ cython_debug/
 # VS Code
 .vscode/
 
-# KnoWiki Specific files
-knowiki.log
-.brain/
+# Knowcode Specific files
+knowcode.log
+.knowcode/
 .agent/

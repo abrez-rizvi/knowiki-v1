@@ -306,3 +306,42 @@
 {"entities": 175, "relationships": 579, "resolved_calls": 225, "event": "parser.complete", "level": "info", "timestamp": "2026-06-21T15:01:57.898634Z"}
 {"file": "C:\\projects\\knowiki-v1\\.brain\\state.yaml", "revision": "S-002", "event": "state_manager.updated", "level": "info", "timestamp": "2026-06-21T15:01:57.912857Z"}
 {"next_revision": "S-002", "event": "engine.sync.complete", "level": "info", "timestamp": "2026-06-21T15:01:57.912923Z"}
+{"brain_root": "C:\\KnoWiki\\.brain", "event": "artifact_builder.started", "level": "info", "timestamp": "2026-06-22T06:55:06.340273Z"}
+{"path": "C:\\KnoWiki\\.brain", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.341408Z"}
+{"path": "C:\\KnoWiki\\.brain\\structure", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.342189Z"}
+{"path": "C:\\KnoWiki\\.brain\\structure\\snapshots", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.342758Z"}
+{"path": "C:\\KnoWiki\\.brain\\reports", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.343389Z"}
+{"path": "C:\\KnoWiki\\.brain\\logs", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.344450Z"}
+{"path": "C:\\KnoWiki\\.brain\\knowledge", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.345564Z"}
+{"path": "C:\\KnoWiki\\.brain\\knowledge\\architecture", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.346033Z"}
+{"path": "C:\\KnoWiki\\.brain\\knowledge\\decisions", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.346579Z"}
+{"path": "C:\\KnoWiki\\.brain\\knowledge\\constraints", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.347301Z"}
+{"path": "C:\\KnoWiki\\.brain\\knowledge\\conventions", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.347764Z"}
+{"path": "C:\\KnoWiki\\.brain\\knowledge\\components", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.348266Z"}
+{"path": "C:\\KnoWiki\\.agent", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.348700Z"}
+{"path": "C:\\KnoWiki\\.agent\\skills", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.349174Z"}
+{"path": "C:\\KnoWiki\\.agent\\workflows", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.349559Z"}
+{"path": "C:\\KnoWiki\\.agent\\memory", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.350545Z"}
+{"path": "C:\\KnoWiki\\.agent\\skills\\system", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.351420Z"}
+{"path": "C:\\KnoWiki\\.brain\\knowledge\\raw", "event": "artifact_builder.mkdir", "level": "debug", "timestamp": "2026-06-22T06:55:06.352005Z"}
+{"file": "C:\\KnoWiki\\.agent\\BRAIN.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.354946Z"}
+{"file": "C:\\KnoWiki\\.brain\\knowledge\\knowledge-maintenance.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.356568Z"}
+{"file": "C:\\KnoWiki\\.agent\\skills\\example-skill.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.358406Z"}
+{"file": "C:\\KnoWiki\\.agent\\workflows\\example-workflow.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.359951Z"}
+{"file": "C:\\KnoWiki\\.brain\\knowledge\\architecture\\architecture.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.360782Z"}
+{"file": "C:\\KnoWiki\\.brain\\knowledge\\decisions\\decisions.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.361748Z"}
+{"file": "C:\\KnoWiki\\.brain\\knowledge\\constraints\\constraints.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.362650Z"}
+{"file": "C:\\KnoWiki\\.brain\\knowledge\\conventions\\conventions.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.363558Z"}
+{"file": "C:\\KnoWiki\\.brain\\knowledge\\components\\components.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.364655Z"}
+{"file": "C:\\KnoWiki\\.agent\\memory\\active_context.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.366787Z"}
+{"file": "C:\\KnoWiki\\.agent\\skills\\system\\context_tracker.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.368444Z"}
+{"file": "C:\\KnoWiki\\.brain\\knowledge\\raw\\README.md", "event": "artifact_builder.render", "level": "debug", "timestamp": "2026-06-22T06:55:06.370063Z"}
+{"event": "artifact_builder.complete", "level": "info", "timestamp": "2026-06-22T06:55:06.370156Z"}
+{"event": "engine.initialize.started", "level": "info", "timestamp": "2026-06-22T06:55:06.370653Z"}
+{"repo_root": "C:\\KnoWiki", "event": "parser.started", "level": "info", "timestamp": "2026-06-22T06:55:06.370714Z"}
+{"files_found": 58, "languages": {"PYTHON": 57, "JAVASCRIPT": 1}, "event": "parser.discovery_complete", "level": "info", "timestamp": "2026-06-22T06:55:06.379706Z"}
+{"entities": 179, "relationships": 601, "resolved_calls": 235, "event": "parser.complete", "level": "info", "timestamp": "2026-06-22T06:55:06.570436Z"}
+{"file": "C:\\KnoWiki\\.brain\\state.yaml", "structural_revision": "S-001", "event": "state_manager.initialized", "level": "info", "timestamp": "2026-06-22T06:55:06.582187Z"}
+{"revision": "S-001", "event": "engine.initialize.complete", "level": "info", "timestamp": "2026-06-22T06:55:06.582272Z"}
+{"file": "C:\\KnoWiki\\.brain\\state.yaml", "semantic_revision": "M-001", "event": "state_manager.semantic_bumped", "level": "info", "timestamp": "2026-06-22T06:55:10.163409Z"}
+{"deleted_count": 1, "event": "semantic_sync.ingest_flushed", "level": "info", "timestamp": "2026-06-22T06:55:10.163671Z"}

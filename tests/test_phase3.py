@@ -15,7 +15,7 @@ def test_phase3():
         git_dir = td / ".git"
         git_dir.mkdir()
         
-        repo = Repository(root=td.resolve(), git_dir=git_dir.resolve(), brain_dir=(td / ".brain").resolve(), agent_dir=(td / ".agent").resolve())
+        repo = Repository(root=td.resolve(), git_dir=git_dir.resolve(), knowcode_dir=(td / ".knowcode").resolve(), agent_dir=(td / ".agent").resolve())
         paths = build_paths(repo)
         
         # Run builder
@@ -23,7 +23,7 @@ def test_phase3():
         builder.build()
         
         # Verify Directories
-        assert paths.brain_root.is_dir()
+        assert paths.knowcode_root.is_dir()
         assert paths.structure_dir.is_dir()
         assert paths.snapshots_dir.is_dir()
         assert paths.reports_dir.is_dir()
@@ -40,11 +40,11 @@ def test_phase3():
         print("[OK] Directory structure correctly scaffolded")
         
         # Verify Templates
-        assert paths.brain_file.is_file()
-        brain_text = paths.brain_file.read_text(encoding="utf-8")
-        assert td.resolve().name in brain_text, "Project name not templated into BRAIN.md"
-        assert "Runtime:" in brain_text
-        assert "Structural Engine:" in brain_text
+        assert paths.knowcode_file.is_file()
+        knowcode_text = paths.knowcode_file.read_text(encoding="utf-8")
+        assert td.resolve().name in knowcode_text, "Project name not templated into BRAIN.md"
+        assert "Runtime:" in knowcode_text
+        assert "Structural Engine:" in knowcode_text
         
         km_file = paths.knowledge_dir / "knowledge-maintenance.md"
         assert km_file.is_file()
