@@ -33,6 +33,7 @@ KnowCode partitions codebase understanding into three clean domains:
 ## Key Features
 
 - **Native Agent Integration:** Built-in slash commands (`/knowcode`, `/know-sync`) that plug directly into Agentic IDEs without configuration.
+- **Smart File Discovery:** Natively respects your `.gitignore` to prevent parsing build artifacts. It also features built-in fallback protection against framework cache folders (e.g., `.next`, `.nuxt`) and minified bundles (`.min.js`), ensuring your AST snapshots remain lightning-fast and bloat-free.
 - **Multi-Language AST Parsing**: Built on top of `tree-sitter`, with out-of-the-box support for **Python**, **JavaScript**, and **TypeScript**.
 - **Deterministic State & Revision Tracking**: Tracks codebase changes across sequential revisions (`S-001`, `S-002`, etc.).
 - **Diff & Report Generation**: Automatically computes additions, deletions, line-boundary modifications, and maps changes to their top-level affected components.
